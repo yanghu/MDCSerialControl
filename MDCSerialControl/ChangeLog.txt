@@ -1,0 +1,30 @@
+4/8:
+	Modified the scope decode mode. if the scope is paused, do not do any decoding, just return;
+	to acommodate this, the receiving char function is also modified to deal with buffer overflow.
+	if bufferHead == decodeHead, after receiving a char, move decode head accordingly. This will give up the data of one byte.
+	otherwise, the whole bufer's data will be lost. 
+
+	Adding the data save function. in CDecode class, there's a SaveData(). 
+	
+	Added coordinate grid plot as background for the scope. it's in PreSubclass() in the ScopePaint class;
+4/4:
+	Added save plot function.
+4/1:
+	Found a bug: when exiting, since decoding and char receiving are invoked by timer, they will be blocked while the serial port is trying to exit.
+	The reader thread will try to send the received char, while using "SendMessage", it will be blocked because the main thread is block somewhere else and cannot respond to the message.
+	Change "SendMessage" to "PostMessage".
+
+3/31:
+	CDecode:
+	Change scope buffer structure, from pointer array, to 2-d array (matrix);
+
+3/30:
+	CDecode:
+		added Create() and Release().
+		Changed m_szDescription to CStringArray class. Modified corresponding initialization and deletion.
+		Changed initialization. Initialize all variables. All pointers point to NULL except the scope info.
+	CSerial:
+		Added Create() and Release();
+		Moved buffer, events and critical section initialization from OpenPort to Create()
+		Changed OpenPort 's argument list;
+		When open port fails, does not operate the buffers. since they are created in Create();
