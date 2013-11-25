@@ -11,18 +11,18 @@ class CEditFloat : public CEdit
 public:
 	CEditFloat(int nLimit=10);
 	virtual ~CEditFloat();
-
+	double getValue();
 protected:
 	DECLARE_MESSAGE_MAP()
 	int m_nLimit;
-
+	double m_fValue;
 //Overrides
 
 protected:
 	virtual void PreSubclassWindow();
 public:
-//	afx_msg void OnKillFocus(CWnd* pNewWnd);
 	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+	afx_msg void OnKillFocus(CWnd* pNewWnd);
 };
 
 

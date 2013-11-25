@@ -22,6 +22,7 @@
 
 #define SCOPE_REFRESH_INTERVAL	40
 
+
 // CMDCSerialControlDlg dialog
 
 class CMDCSerialControlDlg : public CDialogEx
@@ -32,7 +33,6 @@ class CMDCSerialControlDlg : public CDialogEx
 protected:
 	CSerial m_myCom;
 	CDecode m_Decoder;	//decoder
-
 	CScopePaint m_Scope;	//scope;
 	CWinThread* m_DecodeThread;
 	afx_msg LRESULT OnCharsReceived(WPARAM pRxBuffer,	//pointer to RxBuffer
@@ -52,7 +52,8 @@ protected:
 
 	//subclass controls
 	CEditFloat	m_ebValueInput;
-
+	// edit box for input pwm period of the DSP
+	CEditFloat m_ebTpwm;
 	//toolbar and menu
 	CToolBar m_ToolBar;
 	CImageList	m_imagelist;
@@ -131,4 +132,7 @@ public:
 	afx_msg void OnBnClickedGainDown();
 //	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedChnSel();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+
+
 };

@@ -7,6 +7,7 @@ adjustBorder
 // #include <atlconv.h>
 
 
+
 #include "stdafx.h"
 #include "MDCSerialControl.h"
 #include "MDCSerialControlDlg.h"
@@ -16,6 +17,7 @@ adjustBorder
 #include <Windows.h>
 #include <MMSystem.h>
 #pragma comment(lib, "winmm.lib")
+
 
 //#define NO_DSP  1;
 #ifdef NO_DSP 
@@ -133,7 +135,7 @@ BEGIN_MESSAGE_MAP(CMDCSerialControlDlg, CDialogEx)
 		
 	ON_BN_CLICKED(IDC_CHECK_ALL, &CMDCSerialControlDlg::OnBnClickedCheckAll)
 	ON_BN_CLICKED(IDC_UNCHECK_ALL, &CMDCSerialControlDlg::OnBnClickedUncheckAll)
-//	ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_RES_SLIDER, &CMDCSerialControlDlg::OnTRBNThumbPosChangingResSlider)
+//ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_RES_SLIDER, &CMDCSerialControlDlg::OnTRBNThumbPosChangingResSlider)
 ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_RES_SLIDER, &CMDCSerialControlDlg::OnReleasedcaptureResSlider)
 //ON_NOTIFY(TRBN_THUMBPOSCHANGING, IDC_RES_SLIDER, &CMDCSerialControlDlg::OnThumbposchangingResSlider)
 ON_COMMAND(ID_SAVE_DATA, &CMDCSerialControlDlg::OnSaveData)
@@ -241,13 +243,15 @@ void CMDCSerialControlDlg::OnBnClickedSetData()
 {
 	
 	USES_CONVERSION;
-	CString szVarData;
-	TCHAR* endPtr = NULL;
-
 	int nId = GetDlgItemInt(IDC_VAR_ID);
+	
+	
+// 	CString szVarData;
+// 	TCHAR* endPtr = NULL;
+// 	m_ebValueInput.GetWindowTextW(szVarData);
+// 	_tcstod(szVarData,&endPtr);
 
-	m_ebValueInput.GetWindowTextW(szVarData);
-	double dData = _tcstod(szVarData,&endPtr);
+	double dData = m_ebValueInput.getValue();
 
 	m_Decoder.SetDspData(nId,dData);	//use decoder to check and send command
 	Sleep(10);		//@@@@@@@@@@@@@@@@@@@@@@@@
@@ -662,6 +666,7 @@ void CMDCSerialControlDlg::UserInit(void)		//Initialization Function
 	
 	//subclass
 	m_ebValueInput.SubclassDlgItem(IDC_DATA_INPUT, this);
+	m_ebTpwm.SubclassDlgItem(IDC_TPWM,this);
 	m_Scope.SubclassDlgItem(IDC_CANVAS,this);
 
 	PopulateCommands();		//Initialize Commands List
@@ -670,10 +675,27 @@ void CMDCSerialControlDlg::UserInit(void)		//Initialization Function
 	InitializeVariableTable();	//Initialize the list box
 
 	m_ebValueInput.SetCueBanner(L"Please enter value here.");
+	m_ebTpwm.SetWindowTextW(L"0.0001");
 	m_cbPorts.SetCurSel(0);
 	m_cbCommands.SetCurSel(0);
 	m_cbChannels.SetCurSel(0);
 	
+	int xPointsCount = SCOPE_WIDTH;
+	CString str;
+	str.Format(L"%d",xPointsCount);
+	GetDlgItem(IDC_XPOINTS_CNT)->SetWindowText(str);
+	str.Format(L"%d",xPointsCount/14);
+	GetDlgItem(IDC_XPOINTS_DIV)->SetWindowText(str);
+		
+
+	CString szTpwm;
+	TCHAR* endPtr = NULL;
+	m_ebTpwm.GetWindowTextW(szTpwm);
+		
+	double tpwm = _tcstod(szTpwm,&endPtr);
+	double hscale = xPointsCount/14*tpwm;
+	str.Format(L"%f s/Div",hscale);
+	GetDlgItem(IDC_HSCALE)->SetWindowText(str);
 }
 
 
@@ -885,6 +907,24 @@ void CMDCSerialControlDlg::OnReleasedcaptureResSlider(NMHDR *pNMHDR, LRESULT *pR
 	int range = m_Scope.GetChnBufferSize() - 100;
 	int nRes = nPos*range/100 + 100;
 	m_Scope.SetResolution(nRes);
+
+	//update ponits counter
+	CString str;
+	str.Format(L"%d",nRes);
+	GetDlgItem(IDC_XPOINTS_CNT)->SetWindowText(str);
+	str.Format(L"%d",nRes/14);
+	GetDlgItem(IDC_XPOINTS_DIV)->SetWindowText(str);
+	
+
+	CString szTpwm;
+	TCHAR* endPtr = NULL;
+	m_ebTpwm.GetWindowTextW(szTpwm);
+
+	double tpwm = _tcstod(szTpwm,&endPtr);
+
+	double hscale = nRes/14*tpwm*10;
+	str.Format(L"%f s/Div",hscale);
+	GetDlgItem(IDC_HSCALE)->SetWindowText(str);
 }
 
 
@@ -1132,8 +1172,6 @@ void CMDCSerialControlDlg::OnBnClickedGainDown()
 
 
 
-
-
 void CMDCSerialControlDlg::OnBnClickedChnSel()
 {
 	int nId, nChn;
@@ -1144,5 +1182,3 @@ void CMDCSerialControlDlg::OnBnClickedChnSel()
 
 	// TODO: Add your control notification handler code here
 }
-
-/*void CMDCSerialControlApp::SetScopeLabel(int nId=0)*/

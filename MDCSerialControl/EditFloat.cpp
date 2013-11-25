@@ -9,6 +9,7 @@
 IMPLEMENT_DYNAMIC(CEditFloat, CEdit)
 
 CEditFloat::CEditFloat(int nLimit)
+	:m_fValue(0)
 {
 	m_nLimit = nLimit;
 }
@@ -20,7 +21,7 @@ CEditFloat::~CEditFloat()
 
 BEGIN_MESSAGE_MAP(CEditFloat, CEdit)
 	ON_WM_CHAR()
-//	ON_WM_KILLFOCUS()
+	ON_WM_KILLFOCUS()
 END_MESSAGE_MAP()
 // CEditFloat message handlers
 
@@ -82,16 +83,20 @@ void CEditFloat::PreSubclassWindow()
 	SetLimitText(m_nLimit);
 }
 
-// void CEditFloat::OnKillFocus(CWnd* pNewWnd)
-// {
-// 	CEdit::OnKillFocus(pNewWnd);
-// 
-// 	TCHAR buffer[EDIT_BOX_LIMIT];
-// 	GetWindowText(buffer,m_nLimit);
-// 
-// 	if (buffer[0] == 0)
-// 	{
-// 		SetWindowText(L"0");
-// 	}
-// 	// TODO: Add your message handler code here
-// }
+
+
+void CEditFloat::OnKillFocus(CWnd* pNewWnd)
+{
+	CEdit::OnKillFocus(pNewWnd);
+	CString szVarData;
+	TCHAR* endPtr = NULL;
+
+	GetWindowText(szVarData);
+	m_fValue = _tcstod(szVarData,&endPtr);
+	// TODO: Add your message handler code here
+}
+
+double CEditFloat::getValue()
+{
+	return m_fValue;
+}

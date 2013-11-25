@@ -15,6 +15,8 @@
 
 #define DATA_RANGE	200
 
+#define SCOPE_WIDTH 700
+#define SCOPE_HEIGHT 200
 
 // CScopePaint
 

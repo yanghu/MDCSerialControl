@@ -12,8 +12,8 @@
 IMPLEMENT_DYNAMIC(CScopePaint, CStatic)
 
 CScopePaint::CScopePaint()
-:m_nWidth(700)
-,m_nHeight(200)
+:m_nWidth(SCOPE_WIDTH)
+,m_nHeight(SCOPE_HEIGHT)
 ,m_nPointsToDraw(m_nWidth)
 ,m_nChnBufferSize(30000)
 ,m_pScopeBuffer(NULL)

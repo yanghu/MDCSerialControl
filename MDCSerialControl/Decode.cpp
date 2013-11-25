@@ -859,7 +859,7 @@ BOOL CDecode::SetDspData(int nId, double dData)
 	sprintf_s(str,"%02d",nId);
 	szCmd[2] = str[1];
 	szCmd[3] = str[0];
-
+	//prepare data
 	LONG32 lData = (LONG32)(dData * ENCODE_MULTIPLIER);
 	char longdata[9];
 	sprintf_s(longdata,"%08I32X",lData);
