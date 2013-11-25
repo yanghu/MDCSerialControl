@@ -1163,9 +1163,42 @@ void CMDCSerialControlDlg::OnBnClickedChnSel()
 
 	m_Decoder.SelectChannel(nId,nChn);
 
+	//update channel signal description
+	CString description;
+	description = m_lcVarTable.GetItemText(nId,2);
+
+	switch (nChn)
+	{
+	case 0:
+		GetDlgItem(IDC_DESC_CHN0)->SetWindowText(description);
+		break;
+	case 1:
+		GetDlgItem(IDC_DESC_CHN1)->SetWindowText(description);
+		break;
+	case 2:
+		GetDlgItem(IDC_DESC_CHN2)->SetWindowText(description);
+		break;
+	case 3:
+		GetDlgItem(IDC_DESC_CHN3)->SetWindowText(description);
+		break;
+	case 4:
+		GetDlgItem(IDC_DESC_CHN4)->SetWindowText(description);
+		break;
+	case 5:
+		GetDlgItem(IDC_DESC_CHN5)->SetWindowText(description);
+		break;
+	case 6:
+		GetDlgItem(IDC_DESC_CHN6)->SetWindowText(description);
+		break;
+	case 7:
+		GetDlgItem(IDC_DESC_CHN7)->SetWindowText(description);
+		break;
+	case 8:
+		GetDlgItem(IDC_DESC_CHN8)->SetWindowText(description);
+		break;
 	// TODO: Add your control notification handler code here
 }
-
+}
 
 void CMDCSerialControlDlg::OnKillfocusTpwm()
 {
