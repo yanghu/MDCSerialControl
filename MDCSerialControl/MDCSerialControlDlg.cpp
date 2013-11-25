@@ -730,7 +730,7 @@ void CMDCSerialControlDlg::InitializeVariableTable()
 	m_lcVarTable.DeleteAllItems();	//clear the table;
 
 	m_lcVarTable.InsertColumn(0,L"ID", LVCFMT_LEFT, 30);
-	m_lcVarTable.InsertColumn(1,L"Type", LVCFMT_LEFT,40);
+	m_lcVarTable.InsertColumn(1,L"Type", LVCFMT_LEFT,50);
 	m_lcVarTable.InsertColumn(2,L"Description",LVCFMT_LEFT,200);
 	m_lcVarTable.InsertColumn(3,L"Min",LVCFMT_LEFT,60);
 	m_lcVarTable.InsertColumn(4,L"Max",LVCFMT_LEFT,60);
