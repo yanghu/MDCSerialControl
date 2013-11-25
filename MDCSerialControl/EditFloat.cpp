@@ -81,6 +81,7 @@ void CEditFloat::PreSubclassWindow()
 
 	ModifyStyle(0,ES_NUMBER);	//modify the style of the edit box to only allow number to be inputed
 	SetLimitText(m_nLimit);
+	UpdateValue();
 }
 
 
@@ -88,14 +89,18 @@ void CEditFloat::PreSubclassWindow()
 void CEditFloat::OnKillFocus(CWnd* pNewWnd)
 {
 	CEdit::OnKillFocus(pNewWnd);
+	UpdateValue();
+	// TODO: Add your message handler code here
+}
+
+void CEditFloat::UpdateValue()
+{
 	CString szVarData;
 	TCHAR* endPtr = NULL;
 
 	GetWindowText(szVarData);
 	m_fValue = _tcstod(szVarData,&endPtr);
-	// TODO: Add your message handler code here
 }
-
 double CEditFloat::getValue()
 {
 	return m_fValue;

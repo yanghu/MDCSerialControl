@@ -16,6 +16,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 	int m_nLimit;
 	double m_fValue;
+	void UpdateValue();
 //Overrides
 
 protected:

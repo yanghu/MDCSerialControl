@@ -86,6 +86,7 @@ protected:
 	afx_msg void PopulateCommands(void);
 	afx_msg void PopulateVariableTable(void);
 	afx_msg void InitializeVariableTable(void);
+	afx_msg void UpdateHScale(int nRes);
 public:
 	CListCtrl m_lcVarTable;
 	CComboBox m_cbPorts;
@@ -135,4 +136,9 @@ public:
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 
 
+protected:
+	// Indicate x axis scale
+	CStatic m_stTimeScale;
+public:
+	afx_msg void OnKillfocusTpwm();
 };

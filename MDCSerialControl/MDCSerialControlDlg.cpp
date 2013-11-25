@@ -99,6 +99,7 @@ void CMDCSerialControlDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_VAR_TABLE, m_lcVarTable);
 	DDX_Control(pDX, IDC_RES_SLIDER, m_sldResSlider);
 	DDX_Control(pDX, IDC_CHANNELS, m_cbChannels);
+	DDX_Control(pDX, IDC_HSCALE, m_stTimeScale);
 }
 
 BEGIN_MESSAGE_MAP(CMDCSerialControlDlg, CDialogEx)
@@ -146,6 +147,7 @@ ON_COMMAND(ID_ABOUT, &CMDCSerialControlDlg::OnAbout)
 ON_BN_CLICKED(IDC_GAIN_UP, &CMDCSerialControlDlg::OnBnClickedGainUp)
 ON_BN_CLICKED(IDC_GAIN_DOWN, &CMDCSerialControlDlg::OnBnClickedGainDown)
 ON_BN_CLICKED(IDC_CHN_SEL, &CMDCSerialControlDlg::OnBnClickedChnSel)
+ON_EN_KILLFOCUS(IDC_TPWM, &CMDCSerialControlDlg::OnKillfocusTpwm)
 END_MESSAGE_MAP()
 
 
@@ -664,6 +666,7 @@ void CMDCSerialControlDlg::UserInit(void)		//Initialization Function
  	((CEdit*)GetDlgItem(IDC_VAR_ID_SEL))->SetLimitText(2);
 	((CEdit*)GetDlgItem(IDC_VAR_ID_SEL))->SetCueBanner(L"Enter variable ID here.");
 	
+	GetDlgItem(IDC_TPWM)->SetWindowTextW(L"0.0001");
 	//subclass
 	m_ebValueInput.SubclassDlgItem(IDC_DATA_INPUT, this);
 	m_ebTpwm.SubclassDlgItem(IDC_TPWM,this);
@@ -675,32 +678,28 @@ void CMDCSerialControlDlg::UserInit(void)		//Initialization Function
 	InitializeVariableTable();	//Initialize the list box
 
 	m_ebValueInput.SetCueBanner(L"Please enter value here.");
-	m_ebTpwm.SetWindowTextW(L"0.0001");
+	//m_ebTpwm.SetWindowTextW(L"0.0001");
 	m_cbPorts.SetCurSel(0);
 	m_cbCommands.SetCurSel(0);
 	m_cbChannels.SetCurSel(0);
 	
-	int xPointsCount = SCOPE_WIDTH;
-	CString str;
-	str.Format(L"%d",xPointsCount);
-	GetDlgItem(IDC_XPOINTS_CNT)->SetWindowText(str);
-	str.Format(L"%d",xPointsCount/14);
-	GetDlgItem(IDC_XPOINTS_DIV)->SetWindowText(str);
-		
+	int range = m_Scope.GetChnBufferSize() - 100;
+	int nPos = (SCOPE_WIDTH - 100)*100/range;
+	m_sldResSlider.SetPos(nPos);
 
-	CString szTpwm;
-	TCHAR* endPtr = NULL;
-	m_ebTpwm.GetWindowTextW(szTpwm);
-		
-	double tpwm = _tcstod(szTpwm,&endPtr);
-	double hscale = xPointsCount/14*tpwm;
-	str.Format(L"%f s/Div",hscale);
-	GetDlgItem(IDC_HSCALE)->SetWindowText(str);
+    UpdateHScale(SCOPE_WIDTH);
 }
 
 
 
-
+void CMDCSerialControlDlg::UpdateHScale(int nRes)
+{
+	CString str;
+	double tpwm = m_ebTpwm.getValue();
+	double hscale = nRes/14*tpwm*10;
+	str.Format(L"%f s/Div",hscale);
+	m_stTimeScale.SetWindowText(str);
+}
 
 
 
@@ -907,24 +906,8 @@ void CMDCSerialControlDlg::OnReleasedcaptureResSlider(NMHDR *pNMHDR, LRESULT *pR
 	int range = m_Scope.GetChnBufferSize() - 100;
 	int nRes = nPos*range/100 + 100;
 	m_Scope.SetResolution(nRes);
-
-	//update ponits counter
-	CString str;
-	str.Format(L"%d",nRes);
-	GetDlgItem(IDC_XPOINTS_CNT)->SetWindowText(str);
-	str.Format(L"%d",nRes/14);
-	GetDlgItem(IDC_XPOINTS_DIV)->SetWindowText(str);
 	
-
-	CString szTpwm;
-	TCHAR* endPtr = NULL;
-	m_ebTpwm.GetWindowTextW(szTpwm);
-
-	double tpwm = _tcstod(szTpwm,&endPtr);
-
-	double hscale = nRes/14*tpwm*10;
-	str.Format(L"%f s/Div",hscale);
-	GetDlgItem(IDC_HSCALE)->SetWindowText(str);
+	UpdateHScale(nRes);
 }
 
 
@@ -1180,5 +1163,16 @@ void CMDCSerialControlDlg::OnBnClickedChnSel()
 
 	m_Decoder.SelectChannel(nId,nChn);
 
+	// TODO: Add your control notification handler code here
+}
+
+
+void CMDCSerialControlDlg::OnKillfocusTpwm()
+{
+	int nPos = m_sldResSlider.GetPos();
+	int range = m_Scope.GetChnBufferSize() - 100;
+	int nRes = nPos*range/100 + 100;
+	m_Scope.SetResolution(nRes);
+	UpdateHScale(nRes);
 	// TODO: Add your control notification handler code here
 }
