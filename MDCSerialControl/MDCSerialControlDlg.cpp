@@ -49,7 +49,8 @@ adjustBorder
 //messagemap for checkboxes.
 #define CHECK_MAP(x)	ON_BN_CLICKED(IDC_CHECK##x, &CMDCSerialControlDlg::OnBnClickedCheck##x)
 
-
+#define GAINUPID(x) IDC_GAIN_UP_##x
+#define GAINDOWNID(x) IDC_GAIN_DOWN_##x
 
 // CAboutDlg dialog used for App About
 
@@ -1208,4 +1209,44 @@ void CMDCSerialControlDlg::OnKillfocusTpwm()
 	m_Scope.SetResolution(nRes);
 	UpdateHScale(nRes);
 	// TODO: Add your control notification handler code here
+}
+
+BOOL CMDCSerialControlDlg::GainChange(UINT uId,int chn)
+{
+	if (uId == IDC_GAIN_UP_0)	MessageBox(L"!!!");
+	return TRUE;
+}
+
+
+BOOL CMDCSerialControlDlg::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (HIWORD(wParam) == BN_CLICKED)
+	{
+		UINT uid = LOWORD(wParam);
+		int chn = 0;
+		switch(uid)
+		{
+			case GAINUPID(0):
+			case GAINDOWNID(0):
+				chn = 0;
+				break;
+			case GAINUPID(1):
+			case GAINDOWNID(1):
+				chn = 1;
+				break;
+			case GAINUPID(2):
+			case GAINDOWNID(2):
+				chn = 2;
+				break;
+
+		}
+		
+
+			if  == GAINUPID(x) || LOWORD(wParam) == GAINDOWNID(x))
+				GainChange(LOWORD(wParam),x);
+				return TRUE;
+		}
+	}
+	return CDialogEx::OnCommand(wParam, lParam);
 }
