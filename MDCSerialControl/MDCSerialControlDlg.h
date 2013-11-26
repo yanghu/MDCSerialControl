@@ -87,7 +87,7 @@ protected:
 	afx_msg void PopulateVariableTable(void);
 	afx_msg void InitializeVariableTable(void);
 	afx_msg void UpdateHScale(int nRes);
-	afx_msg BOOL GainChange(UINT uId,int chn);
+	afx_msg BOOL ScopeZoom(int chn,bool zoomin);
 public:
 	CListCtrl m_lcVarTable;
 	CComboBox m_cbPorts;
