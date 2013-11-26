@@ -87,6 +87,7 @@ protected:
 	afx_msg void PopulateVariableTable(void);
 	afx_msg void InitializeVariableTable(void);
 	afx_msg void UpdateHScale(int nRes);
+	afx_msg BOOL ScopeZoom(int chn,bool zoomin);
 public:
 	CListCtrl m_lcVarTable;
 	CComboBox m_cbPorts;
@@ -141,4 +142,5 @@ protected:
 	CStatic m_stTimeScale;
 public:
 	afx_msg void OnKillfocusTpwm();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 };

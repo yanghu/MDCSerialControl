@@ -49,7 +49,8 @@ adjustBorder
 //messagemap for checkboxes.
 #define CHECK_MAP(x)	ON_BN_CLICKED(IDC_CHECK##x, &CMDCSerialControlDlg::OnBnClickedCheck##x)
 
-
+#define GAINUPID(x) IDC_GAIN_UP_##x
+#define GAINDOWNID(x) IDC_GAIN_DOWN_##x
 
 // CAboutDlg dialog used for App About
 
@@ -144,8 +145,6 @@ ON_COMMAND(ID_SAVE_PLOT, &CMDCSerialControlDlg::OnSavePlot)
 ON_COMMAND(ID_LOAD_DATA, &CMDCSerialControlDlg::OnLoadData)
 ON_COMMAND(ID_ABOUT, &CMDCSerialControlDlg::OnAbout)
 /*ON_WM_CTLCOLOR()*/
-ON_BN_CLICKED(IDC_GAIN_UP, &CMDCSerialControlDlg::OnBnClickedGainUp)
-ON_BN_CLICKED(IDC_GAIN_DOWN, &CMDCSerialControlDlg::OnBnClickedGainDown)
 ON_BN_CLICKED(IDC_CHN_SEL, &CMDCSerialControlDlg::OnBnClickedChnSel)
 ON_EN_KILLFOCUS(IDC_TPWM, &CMDCSerialControlDlg::OnKillfocusTpwm)
 END_MESSAGE_MAP()
@@ -1037,123 +1036,6 @@ int CMDCSerialControlDlg::PopulateChannels(void)
 }
 
 
-void CMDCSerialControlDlg::OnBnClickedGainUp()
-{
-	CString szChannel;
-	int nChannel;
-	double dChnGain;
-	double * pChnGain;
-	m_cbChannels.GetWindowTextW(szChannel);
-	nChannel = m_cbChannels.GetCurSel();
-
-
-	pChnGain = m_Decoder.GetScopeChnGain();
-
-	dChnGain = *(pChnGain + nChannel);
-
-	dChnGain *=2;
-	m_Decoder.SetChannelGain(nChannel,dChnGain);
-
-	//change the label indicating the gain.
-	double dScale;
-	dScale = 20/dChnGain;
-
-	CString str;
-	str.Format(L"%.2f/Div",dScale);
-
-	switch (nChannel)
-	{
-	case 0:
-		GetDlgItem(IDC_GAIN_CHN0)->SetWindowText(str);
-			break;
-	case 1:
-		GetDlgItem(IDC_GAIN_CHN1)->SetWindowText(str);
-		break;
-	case 2:
-		GetDlgItem(IDC_GAIN_CHN2)->SetWindowText(str);
-		break;
-	case 3:
-		GetDlgItem(IDC_GAIN_CHN3)->SetWindowText(str);
-		break;
-	case 4:
-		GetDlgItem(IDC_GAIN_CHN4)->SetWindowText(str);
-		break;
-	case 5:
-		GetDlgItem(IDC_GAIN_CHN5)->SetWindowText(str);
-		break;
-	case 6:
-		GetDlgItem(IDC_GAIN_CHN6)->SetWindowText(str);
-		break;
-	case 7:
-		GetDlgItem(IDC_GAIN_CHN7)->SetWindowText(str);
-		break;
-	case 8:
-		GetDlgItem(IDC_GAIN_CHN8)->SetWindowText(str);
-		break;
-	}
-	// TODO: Add your control notification handler code here
-}
-
-
-void CMDCSerialControlDlg::OnBnClickedGainDown()
-{
-	CString szChannel;
-	int nChannel;
-	double dChnGain;
-	double * pChnGain;
-	m_cbChannels.GetWindowTextW(szChannel);
-	nChannel = m_cbChannels.GetCurSel();
-
-
-	pChnGain = m_Decoder.GetScopeChnGain();
-
-	dChnGain = *(pChnGain + nChannel);
-
-	dChnGain /=2;
-	m_Decoder.SetChannelGain(nChannel,dChnGain);
-
-
-	//change the label indicating the gain.
-	double dScale;
-	dScale = 20/dChnGain;
-
-	CString str;
-	str.Format(L"%.2f/Div",dScale);
-
-	switch (nChannel)
-	{
-	case 0:
-		GetDlgItem(IDC_GAIN_CHN0)->SetWindowText(str);
-		break;
-	case 1:
-		GetDlgItem(IDC_GAIN_CHN1)->SetWindowText(str);
-		break;
-	case 2:
-		GetDlgItem(IDC_GAIN_CHN2)->SetWindowText(str);
-		break;
-	case 3:
-		GetDlgItem(IDC_GAIN_CHN3)->SetWindowText(str);
-		break;
-	case 4:
-		GetDlgItem(IDC_GAIN_CHN4)->SetWindowText(str);
-		break;
-	case 5:
-		GetDlgItem(IDC_GAIN_CHN5)->SetWindowText(str);
-		break;
-	case 6:
-		GetDlgItem(IDC_GAIN_CHN6)->SetWindowText(str);
-		break;
-	case 7:
-		GetDlgItem(IDC_GAIN_CHN7)->SetWindowText(str);
-		break;
-	case 8:
-		GetDlgItem(IDC_GAIN_CHN8)->SetWindowText(str);
-		break;
-	}
-	// TODO: Add your control notification handler code here
-}
-
-
 
 void CMDCSerialControlDlg::OnBnClickedChnSel()
 {
@@ -1163,9 +1045,42 @@ void CMDCSerialControlDlg::OnBnClickedChnSel()
 
 	m_Decoder.SelectChannel(nId,nChn);
 
+	//update channel signal description
+	CString description;
+	description = m_lcVarTable.GetItemText(nId,2);
+
+	switch (nChn)
+	{
+	case 0:
+		GetDlgItem(IDC_DESC_CHN0)->SetWindowText(description);
+		break;
+	case 1:
+		GetDlgItem(IDC_DESC_CHN1)->SetWindowText(description);
+		break;
+	case 2:
+		GetDlgItem(IDC_DESC_CHN2)->SetWindowText(description);
+		break;
+	case 3:
+		GetDlgItem(IDC_DESC_CHN3)->SetWindowText(description);
+		break;
+	case 4:
+		GetDlgItem(IDC_DESC_CHN4)->SetWindowText(description);
+		break;
+	case 5:
+		GetDlgItem(IDC_DESC_CHN5)->SetWindowText(description);
+		break;
+	case 6:
+		GetDlgItem(IDC_DESC_CHN6)->SetWindowText(description);
+		break;
+	case 7:
+		GetDlgItem(IDC_DESC_CHN7)->SetWindowText(description);
+		break;
+	case 8:
+		GetDlgItem(IDC_DESC_CHN8)->SetWindowText(description);
+		break;
 	// TODO: Add your control notification handler code here
 }
-
+}
 
 void CMDCSerialControlDlg::OnKillfocusTpwm()
 {
@@ -1175,4 +1090,122 @@ void CMDCSerialControlDlg::OnKillfocusTpwm()
 	m_Scope.SetResolution(nRes);
 	UpdateHScale(nRes);
 	// TODO: Add your control notification handler code here
+}
+
+
+
+BOOL CMDCSerialControlDlg::ScopeZoom(int chn,bool zoomin)
+{
+	double dChnGain;
+	double * pChnGain;
+
+	pChnGain = m_Decoder.GetScopeChnGain();
+	dChnGain = *(pChnGain + chn);
+
+	if (zoomin)
+		dChnGain*=2;
+	else
+		dChnGain /=2;
+
+	m_Decoder.SetChannelGain(chn,dChnGain);
+
+	//change the label indicating the gain.
+	double dScale;
+	dScale = 20/dChnGain;
+
+	CString str;
+	str.Format(L"%.2f/Div",dScale);
+
+	switch (chn)
+	{
+	case 0:
+		GetDlgItem(IDC_GAIN_CHN0)->SetWindowText(str);
+		break;
+	case 1:
+		GetDlgItem(IDC_GAIN_CHN1)->SetWindowText(str);
+		break;
+	case 2:
+		GetDlgItem(IDC_GAIN_CHN2)->SetWindowText(str);
+		break;
+	case 3:
+		GetDlgItem(IDC_GAIN_CHN3)->SetWindowText(str);
+		break;
+	case 4:
+		GetDlgItem(IDC_GAIN_CHN4)->SetWindowText(str);
+		break;
+	case 5:
+		GetDlgItem(IDC_GAIN_CHN5)->SetWindowText(str);
+		break;
+	case 6:
+		GetDlgItem(IDC_GAIN_CHN6)->SetWindowText(str);
+		break;
+	case 7:
+		GetDlgItem(IDC_GAIN_CHN7)->SetWindowText(str);
+		break;
+	case 8:
+		GetDlgItem(IDC_GAIN_CHN8)->SetWindowText(str);
+		break;
+	}
+	return TRUE;
+}
+
+
+BOOL CMDCSerialControlDlg::OnCommand(WPARAM wParam, LPARAM lParam)
+{
+	// TODO: Add your specialized code here and/or call the base class
+	if (HIWORD(wParam) == BN_CLICKED)
+	{
+		bool scopeZoomIn = false;
+		UINT uid = LOWORD(wParam);
+		int chn = 0;
+		switch(uid)
+		{
+			case GAINUPID(0):	scopeZoomIn = true;
+			case GAINDOWNID(0):
+				chn = 0;
+				break;
+			case GAINUPID(1):	scopeZoomIn = true;
+			case GAINDOWNID(1):
+				chn = 1;
+				break;
+			case GAINUPID(2):	scopeZoomIn = true;
+			case GAINDOWNID(2):
+				chn = 2;
+				break;
+			case GAINUPID(3):	scopeZoomIn = true;
+			case GAINDOWNID(3):
+				chn = 3;
+				break;
+			case GAINUPID (4):	scopeZoomIn = true;
+			case GAINDOWNID (4):
+				chn = 4;
+				break;
+			case GAINUPID (5):	scopeZoomIn = true;
+			case GAINDOWNID (5):
+				chn = 5;
+				break;
+			case GAINUPID (6):	scopeZoomIn = true;
+			case GAINDOWNID(6):
+				chn = 6;
+				break;
+			case GAINUPID (7):	scopeZoomIn = true;
+			case GAINDOWNID (7):
+				chn = 7;
+				break;
+			case GAINUPID (8):	scopeZoomIn = true;
+			case GAINDOWNID (8):
+				chn = 8;
+				break;
+			case GAINUPID (9):	scopeZoomIn = true;
+			case GAINDOWNID (9):
+				chn = 0;
+				break;
+			default:
+				return CDialogEx::OnCommand(wParam, lParam);
+		}
+		
+		return ScopeZoom(chn,scopeZoomIn);
+	}
+
+	return CDialogEx::OnCommand(wParam, lParam);
 }
