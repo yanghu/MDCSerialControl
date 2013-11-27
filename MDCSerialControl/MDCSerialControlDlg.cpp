@@ -89,7 +89,7 @@ CMDCSerialControlDlg::CMDCSerialControlDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CMDCSerialControlDlg::IDD, pParent)
 	, m_ebValueInput(10)
 {
-	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_hIcon = AfxGetApp()->LoadIcon(IDR_SCOPE);
 }
 
 void CMDCSerialControlDlg::DoDataExchange(CDataExchange* pDX)

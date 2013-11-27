@@ -96,11 +96,14 @@
   <ItemGroup>
     <None Include="ChangeLog.txt" />
     <None Include="ReadMe.txt" />
+    <None Include="res\icon1.ico" />
     <None Include="res\MDCSerialControl.ico" />
     <None Include="res\MDCSerialControl.rc2" />
     <None Include="res\myToolbar.bmp" />
     <None Include="res\myToolbarNew.bmp" />
+    <None Include="res\oscilloscope.ico" />
     <None Include="res\ribbon1.mfcribbon-ms" />
+    <None Include="res\scope.ico" />
     <None Include="res\toolbar1 - Copy.bmp" />
     <None Include="res\toolbar1.bmp" />
     <None Include="res\toolbar2.bmp" />
